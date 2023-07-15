@@ -1,64 +1,107 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
-    <nav className="sticky inset-0 z-10 block h-max w-full max-w-full rounded-none border border-white/80 bg-white bg-opacity-80 py-2 px-4 text-white shadow-md backdrop-blur-2xl backdrop-saturate-200 lg:px-8 lg:py-4">
+    <nav className="sticky inset-0 z-10 block h-max w-full max-w-full rounded-none border border-white/80 bg-white bg-opacity-80 py-1 text-white shadow-md backdrop-blur-2xl backdrop-saturate-200 lg:px-20 lg:py-2">
       <div className="flex items-center text-gray-900">
-        <a
-          href="#"
-          className="mr-4 block cursor-pointer py-1.5 font-sans text-base font-medium leading-relaxed text-inherit antialiased"
+        <Link
+          to="/"
+          className="mr-4 block cursor-pointer py-1.5 text-2xl font-semibold font-sans leading-relaxed text-inherit antialiased"
         >
-          Material Tailwind
-        </a>
+          The Bookshelf
+        </Link>
         <ul className="ml-auto mr-8 hidden items-center gap-6 lg:flex">
           <li className="block p-1 font-sans text-sm font-normal leading-normal text-inherit antialiased">
-            <a className="flex items-center" href="#">
-              Pages
-            </a>
-          </li>
-          <li className="block p-1 font-sans text-sm font-normal leading-normal text-inherit antialiased">
-            <a className="flex items-center" href="#">
-              Account
-            </a>
-          </li>
-          <li className="block p-1 font-sans text-sm font-normal leading-normal text-inherit antialiased">
-            <a className="flex items-center" href="#">
-              Blocks
-            </a>
-          </li>
-          <li className="block p-1 font-sans text-sm font-normal leading-normal text-inherit antialiased">
-            <a className="flex items-center" href="#">
-              Docs
-            </a>
+            <Link to="/all-books" className="flex items-center">
+              All Books
+            </Link>
           </li>
         </ul>
-        <button
-          className="middle none center hidden rounded-lg bg-gradient-to-tr from-pink-600 to-pink-400 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none lg:inline-block"
-          type="button"
-          data-ripple-light="true"
-        >
-          <span>Buy Now</span>
-        </button>
-        <button
-          className="middle none relative ml-auto h-6 max-h-[40px] w-6 max-w-[40px] rounded-lg text-center font-sans text-xs font-medium uppercase text-blue-gray-500 transition-all hover:bg-transparent focus:bg-transparent active:bg-transparent disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none lg:hidden"
-          data-collapse-target="sticky-navar"
-        >
-          <span className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 transform">
+        {/* right side content */}
+        <div className="flex gap-8">
+          <div className="flex gap-2">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+              xmlns="http://www.w3.org/2000/svg"
             >
+              {' '}
+              <circle
+                cx="9"
+                cy="7"
+                r="3"
+                stroke="#333333"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />{' '}
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              ></path>
+                d="M11 13H7C4.79086 13 3 14.7909 3 17C3 18.6569 4.34315 20 6 20H12C13.6569 20 15 18.6569 15 17C15 14.7909 13.2091 13 11 13Z"
+                stroke="#333333"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />{' '}
+              <path
+                d="M15.7751 9.25L20.7249 9.25M20.7249 9.25L19 7.5M20.7249 9.25L19 10.9749"
+                stroke="#333333"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />{' '}
             </svg>
-          </span>
-        </button>
+            <span>Sign In</span>
+          </div>
+          <div className="flex items-center gap-7">
+            <div className="relative">
+              <button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23"
+                  height="23"
+                  fill="currentColor"
+                  className="bi bi-cart"
+                  viewBox="0 0 16 16"
+                  id="IconChangeColor"
+                >
+                  {' '}
+                  <path
+                    d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+                    id="mainIconPathAttribute"
+                  ></path>{' '}
+                </svg>
+              </button>
+              <span className="absolute -right-4 -top-2 w-5 h-5 text-[10px] rounded-full bg-black text-white flex justify-center items-center">
+                2
+              </span>
+            </div>
+            <div className="relative">
+              <button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23"
+                  height="23"
+                  fill="currentColor"
+                  className="bi bi-heart"
+                  viewBox="0 0 16 16"
+                  id="IconChangeColor"
+                >
+                  {' '}
+                  <path
+                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+                    id="mainIconPathAttribute"
+                  ></path>{' '}
+                </svg>
+              </button>
+              <span className="absolute -right-4 -top-2 w-5 h-5 text-[10px] rounded-full bg-black text-white flex justify-center items-center">
+                2
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
   );
