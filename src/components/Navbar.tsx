@@ -20,7 +20,7 @@ const Navbar = () => {
         </ul>
         {/* right side content */}
         <div className="flex gap-8">
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <svg
               width="24"
               height="24"
@@ -53,7 +53,14 @@ const Navbar = () => {
                 stroke-linejoin="round"
               />{' '}
             </svg>
-            <span>Sign In</span>
+            <div className="flex flex-col text-sm font-semibold ">
+              <Link to="/user/signin" className="hover:text-blue-700">
+                Sign In
+              </Link>
+              <Link to="/user/signup" className="hover:text-blue-700">
+                Sign Up
+              </Link>
+            </div>
           </div>
           <div className="flex items-center gap-7">
             <div className="relative">
