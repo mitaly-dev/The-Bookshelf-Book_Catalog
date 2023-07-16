@@ -9,7 +9,8 @@ const store = configureStore({
     cart: cartReducer,
     // user: userReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(auth.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
