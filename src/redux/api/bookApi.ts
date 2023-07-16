@@ -6,10 +6,19 @@ export const bookApi = createApi({
   tagTypes: ['Books'],
   endpoints: (builder) => ({
     getAllBooks: builder.query({
-      query: () => '/api/v1/book',
+      query: ({ searchTerm, genre, publicationYear }) =>
+        `/api/v1/book/?${searchTerm && `searchTerm=${searchTerm}`}${
+          genre && `&genre=${genre}`
+        }${publicationYear && `&publicationYear=${publicationYear}`}`,
+      providesTags: ['Books'],
     }),
     getSingleBook: builder.query({
       query: (id) => `/api/v1/book/${id}`,
+      providesTags: ['Books'],
+    }),
+    getFeaturedBook: builder.query({
+      query: () => `/api/v1/book/featuredBook`,
+      providesTags: ['Books'],
     }),
     addNewBook: builder.mutation({
       query: (data) => ({
@@ -19,7 +28,7 @@ export const bookApi = createApi({
       }),
       invalidatesTags: ['Books'],
     }),
-    updateBook: builder.mutation({
+    updateBookInfo: builder.mutation({
       query: ({ id, data }) => ({
         url: `/api/v1/book/${id}`,
         method: 'PATCH',
@@ -41,5 +50,7 @@ export const {
   useGetAllBooksQuery,
   useGetSingleBookQuery,
   useAddNewBookMutation,
-  useUpdateBookMutation,
+  useUpdateBookInfoMutation,
+  useDeleteBookMutation,
+  useGetFeaturedBookQuery,
 } = bookApi;

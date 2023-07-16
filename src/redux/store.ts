@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { authApi } from './api/authApi';
 import { bookApi } from './api/bookApi';
 import updateBookReducer from './features/bookSlice';
+import searchReducer from './features/searchSlice';
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [bookApi.reducerPath]: bookApi.reducer,
     updateBook: updateBookReducer,
+    search: searchReducer,
     // user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>

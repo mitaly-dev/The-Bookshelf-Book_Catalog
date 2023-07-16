@@ -1,12 +1,47 @@
 import Card from '@/components/Card';
 import { useGetAllBooksQuery } from '@/redux/api/bookApi';
-import React from 'react';
+import { setSearchTermValue } from '@/redux/features/searchSlice';
+import { useAppSelector } from '@/redux/hook';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const AllBooks = () => {
-  const { data, isLoading, isSuccess, isError } =
-    useGetAllBooksQuery(undefined);
-  console.log('books', data);
+  const {
+    searchTerm: searchTerms,
+    genre: genres,
+    publicationYear: publicationYears,
+  } = useAppSelector((state) => state.search);
+
+  console.log('earchTerms', searchTerms);
+
+  const [searchTerm, setSearchTerm] = useState(searchTerms);
+  const [genre, setGenre] = useState(genres);
+  const [publicationYear, setPublicationYear] = useState(publicationYears);
+  const [allPublicationYear, setAllPublicationYear] = useState([]);
+
+  const dispatch = useDispatch();
+  const { data, isLoading, isSuccess, isError } = useGetAllBooksQuery({
+    searchTerm,
+    genre,
+    publicationYear,
+  });
+
+  useEffect(() => {
+    if (genre) {
+      data?.data?.data?.forEach((book: any) => {
+        if (!allPublicationYear.includes(book?.publicationYear)) {
+          console.log('true', book?.publicationYear);
+          setAllPublicationYear([...allPublicationYear, book?.publicationYear]);
+        }
+      });
+    }
+  }, [genre]);
+
+  const handleSearchTerm = (e: any) => {
+    dispatch(setSearchTermValue(e.target.value));
+    setSearchTerm(e.target.value);
+  };
   return (
     <section className="my-10 px-20">
       <div className="flex justify-end">
@@ -32,11 +67,52 @@ const AllBooks = () => {
           Add New Book
         </Link>
       </div>
-      <div className="grid grid-cols-4 gap-3 my-10">
-        {data?.data?.map((book: any) => (
-          <Card key={book._id} book={book} />
-        ))}
+      <h3 className="text-blue-800 font-semibold text-xl mb-3">All Books</h3>
+      <div className="flex gap-2 items-center">
+        <input
+          onChange={(e) => handleSearchTerm(e)}
+          type="text"
+          className="outline-none py-2 px-5 w-6/12 rounded-lg border-2 border-blue-600"
+          placeholder="Search with author,title,genre"
+        />
+        <select
+          onChange={(e) => setGenre(e.target.value)}
+          className="px-5 py-2 rounded-lg border-2 border-blue-700"
+        >
+          <option value="">Select Genre</option>
+          <option value="History">History</option>
+          <option value="Fiction">Fiction</option>
+          <option value="Fantacy">Fantacy</option>
+          <option value="Romance">Romance</option>
+          <option value="Science Fiction">Science Fiction</option>
+          <option value="Classic Literature">Classic Literature</option>
+          <option value="">Reset</option>
+        </select>
+        {/* publication year */}
+        {genre !== '' && (
+          <select
+            onChange={(e) => setPublicationYear(e.target.value)}
+            className="px-5 py-2 rounded-lg border-2 border-blue-700"
+          >
+            {allPublicationYear?.map((year) => {
+              return <option value={year}>{year}</option>;
+            })}
+            <option value="">Reset</option>
+          </select>
+        )}
       </div>
+
+      {data?.data?.data?.length > 0 ? (
+        <div className="grid grid-cols-4 gap-3 my-10">
+          {data?.data?.data?.map((book: any) => (
+            <Card key={book._id} book={book} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-[70vh]">
+          No book found
+        </div>
+      )}
     </section>
   );
 };

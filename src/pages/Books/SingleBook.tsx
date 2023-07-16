@@ -1,17 +1,33 @@
-import { useGetSingleBookQuery } from '@/redux/api/bookApi';
+import {
+  useDeleteBookMutation,
+  useGetSingleBookQuery,
+} from '@/redux/api/bookApi';
+import { updateBook } from '@/redux/features/bookSlice';
 import { userInfoFromLocalstorage } from '@/utils/utils';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const SingleBook = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = userInfoFromLocalstorage;
   const { id } = useParams();
   const { data, isLoading, isError, isSuccess } = useGetSingleBookQuery(id);
+  const [isDelete, setIsDelete] = useState(false);
+  const [deleteBook] = useDeleteBookMutation();
+
   if (isLoading) {
     return <p>Loading..</p>;
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  //   useEffect(() => {
+  //     if (deleteIsSuccess) {
+  //       return toast.success('delete success');
+  //     }
+  //   }, [deleteIsSuccess]);
 
   const {
     title,
@@ -21,15 +37,24 @@ const SingleBook = () => {
     imageUrl,
     genre,
     _id: userId,
-  } = data.data;
+  } = data?.data || {};
 
-  const handleEditButton = () => {
-    console.log('user', user?.email, 'userEmail', userEmail);
+  const handleEditButton = (userId: string) => {
     if (user?.email !== userEmail) {
       return toast.error('You are not authorized to edit this book!');
     }
-    console.log('you are authorized');
+    dispatch(updateBook(data?.data));
     navigate(`/update-book/${userId}`);
+  };
+
+  const handleDeleteBook = () => {
+    const isTrue = window.confirm(
+      'Are you sure , you want to delete this book'
+    );
+    if (isTrue) {
+      deleteBook(id);
+      navigate('/all-books');
+    }
   };
 
   return (
@@ -62,7 +87,10 @@ const SingleBook = () => {
                 >
                   Edit
                 </button>
-                <button className="bg-black hover:bg-gray-700 text-white py-2 rounded-lg w-24">
+                <button
+                  onClick={handleDeleteBook}
+                  className="bg-black hover:bg-gray-700 text-white py-2 rounded-lg w-24"
+                >
                   Delete
                 </button>
               </div>

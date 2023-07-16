@@ -30,7 +30,9 @@ const Card = ({ book }) => {
             <button className="bg-blue-300 text-white px-5 py-2 rounded-lg">
               Add Wishlist
             </button>
-            <Link to={`/book/${book._id}`}>View</Link>
+            <Link to={`/book/${book._id}`} className="text-sm text-blue-600 ">
+              View
+            </Link>
           </div>
         </div>
         <div></div>

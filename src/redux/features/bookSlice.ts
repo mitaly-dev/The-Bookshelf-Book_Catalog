@@ -2,7 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
-  book: {},
+  book: {
+    title: '',
+    author: '',
+    publication: '',
+    userEmail: '',
+    imageUrl: '',
+    genre: '',
+    _id: '',
+  },
 };
 
 const bookSlice = createSlice({
