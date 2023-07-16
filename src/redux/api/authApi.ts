@@ -21,4 +21,4 @@ export const auth = createApi({
   }),
 });
 
-export const { useCreateUserMutation } = auth;
+export const { useCreateUserMutation, useLoginUserMutation } = auth;

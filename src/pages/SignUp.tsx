@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useCreateUserMutation } from '@/redux/api/authApi';
+import {
+  useCreateUserMutation,
+  useLoginUserMutation,
+} from '@/redux/api/authApi';
 import toast, { Toaster } from 'react-hot-toast';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [createUser, { data, isLoading, isError, isSuccess, error }] =
-    useCreateUserMutation();
+    useLoginUserMutation();
 
   interface MyInputTypes {
     name: string;
@@ -18,12 +21,12 @@ const SignUp = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message);
-      navigate('/login-');
+      navigate('/login-user');
     }
     if (isError) {
-      toast.error(error?.data?.message);
+      toast.error('Somthing is wrong');
     }
-  }, [isSuccess, isError, data?.message, error]);
+  }, [isSuccess, isError, data?.message]);
 
   const {
     register,
@@ -60,7 +63,9 @@ const SignUp = () => {
               Name
             </label>
             {errors?.name && (
-              <p className="text-red-600">{errors.name?.message}</p>
+              <p className="text-red-600 text-sm font-semibold">
+                {errors.name?.message}
+              </p>
             )}
           </div>
           <div className="relative h-11 w-full min-w-[200px]">
@@ -83,7 +88,9 @@ const SignUp = () => {
               Email
             </label>
             {errors?.email && (
-              <p className="text-red-600">{errors?.email.message}</p>
+              <p className="text-red-600 text-sm font-semibold">
+                {errors?.email.message}
+              </p>
             )}
           </div>
           <div className="relative h-11 w-full min-w-[200px]">
@@ -103,7 +110,9 @@ const SignUp = () => {
               Password
             </label>
             {errors?.password && (
-              <p className="text-red-600">{errors?.password.message}</p>
+              <p className="text-red-600 text-sm font-semibold">
+                {errors?.password.message}
+              </p>
             )}
           </div>
         </div>

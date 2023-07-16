@@ -1,12 +1,28 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useLoginUserMutation } from '@/redux/api/authApi';
+import { toast } from 'react-hot-toast';
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const [loginUser, { data, isLoading, isError, isSuccess, error }] =
+    useLoginUserMutation();
   interface MyInputTypes {
     email: string;
     password: string;
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message);
+      navigate('/');
+      localStorage.setItem('Bookshelf_token', data.data.accessToken);
+    }
+    if (isError) {
+      toast.error(error?.data?.message);
+    }
+  }, [isSuccess, isError]);
 
   const {
     register,
@@ -16,8 +32,7 @@ const SignIn = () => {
   } = useForm<MyInputTypes>();
 
   const createUser = (data: MyInputTypes) => {
-    console.log('form submitted');
-    console.log('data', data);
+    loginUser(data);
   };
   return (
     <section className="relative flex flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none h-[80vh] justify-center items-center w-5/12 border m-auto my-10">
