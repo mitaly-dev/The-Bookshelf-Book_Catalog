@@ -16,12 +16,12 @@ const SingleBook = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <div className="px-20 my-10 w-9/12 ">
+        <div className="px-20 my-10 w-9/12 m-auto min-h-[70vh]">
           <div className="relative grid grid-cols-2 gap-3 rounded-xl bg-clip-border text-gray-700 shadow-md border">
             <div className="relative m-0 overflow-hidden bg-transparent bg-clip-border text-gray-700 shadow-none rounded-t-lg w-full h-full object-cover">
               <img src={imageUrl} alt="ui/ux review check w-full " />
             </div>
-            <div className="px-2 pb-4">
+            <div className="px-2 pb-4 flex flex-col  mt-4">
               <h4 className="block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased mb-3">
                 {title}
               </h4>
