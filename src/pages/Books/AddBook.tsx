@@ -6,25 +6,40 @@ import {
   useLoginUserMutation,
 } from '@/redux/api/authApi';
 import toast, { Toaster } from 'react-hot-toast';
+import { useAddNewBookMutation } from '@/redux/api/bookApi';
+import { userInfoFromLocalstorage } from '@/utils/utils';
 
 const AddBook = () => {
   const navigate = useNavigate();
-  const [createUser, { data, isLoading, isError, isSuccess, error }] =
-    useLoginUserMutation();
+  const [addNewBook, { data, isLoading, isError, isSuccess, error }] =
+    useAddNewBookMutation();
+
+  const userInfo = userInfoFromLocalstorage();
+
+  // title: string;
+  // author: string;
+  // genre: string;
+  // publication: string;
+  // imageUrl: string;
+  // userEmail: string;
+  // reviews: Ireview[];
 
   interface MyInputTypes {
-    name: string;
-    email: string;
-    password: string;
+    title: string;
+    author: string;
+    genre: string;
+    publication: string;
+    imageUrl: string;
+    userEmail: string;
   }
 
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message);
-      navigate('/login-user');
+      navigate('/all-books');
     }
     if (isError) {
-      toast.error('Somthing is wrong');
+      toast.error(error?.data?.message);
     }
   }, [isSuccess, isError, data?.message]);
 
@@ -37,7 +52,11 @@ const AddBook = () => {
   } = useForm<MyInputTypes>();
 
   const createUserHandle = (data: MyInputTypes) => {
-    createUser(data);
+    if (data.imageUrl == '') {
+      data.imageUrl = 'https://i.ibb.co/7b2Gx0B/book.png';
+    }
+    const allData = { ...data, userEmail: userInfo?.email };
+    addNewBook(allData);
   };
   return (
     <section className="relative flex flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none h-[80vh] justify-center items-center w-5/12 border m-auto my-10">
@@ -54,66 +73,98 @@ const AddBook = () => {
         <div className="mb-4 flex flex-col gap-6">
           <div className="relative h-11 w-full min-w-[200px]">
             <input
-              {...register('name', { required: 'Name is required!' })}
+              {...register('title', { required: 'Title is required!' })}
               type="text"
               className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-blue-700 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
               placeholder=" "
             />
             <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-700 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-blue-700 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-blue-700 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-              Name
+              Title
             </label>
-            {errors?.name && (
+            {errors?.title && (
               <p className="text-red-600 text-sm font-semibold">
-                {errors.name?.message}
+                {errors.title?.message}
               </p>
             )}
           </div>
           <div className="relative h-11 w-full min-w-[200px]">
             <input
-              type="email"
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: 'Email is not valid!',
-                },
+              type="text"
+              {...register('author', {
+                required: 'Author name is required',
               })}
               className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-blue-700 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
               placeholder=" "
             />
             <label
-              htmlFor="email"
+              htmlFor="author"
               className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-700 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-blue-700 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-blue-700 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"
             >
-              Email
+              Author
             </label>
-            {errors?.email && (
+            {errors?.author && (
               <p className="text-red-600 text-sm font-semibold">
-                {errors?.email.message}
+                {errors?.author.message}
+              </p>
+            )}
+          </div>
+          <div className="relative h-11 w-full min-w-[200px]">
+            {/* <input
+              {...register('genre', {
+                required: 'Genre is required!',
+              })}
+              type="text"
+              className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-blue-700 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+              placeholder=" "
+            /> */}
+            <select
+              {...register('genre', {
+                required: 'Genre is required!',
+              })}
+              className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-blue-700 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+            >
+              <option value="">Select</option>
+              <option value="nobel">Nobel</option>
+              <option value="comedy">Comedy</option>
+              <option value="history">History</option>
+            </select>
+            <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-700 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-blue-700 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-blue-700 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+              Genre
+            </label>
+            {errors?.genre && (
+              <p className="text-red-600 text-sm font-semibold">
+                {errors?.genre.message}
               </p>
             )}
           </div>
           <div className="relative h-11 w-full min-w-[200px]">
             <input
-              {...register('password', {
-                required: 'Password is required!',
-                minLength: {
-                  value: 6,
-                  message: 'password should be must 6 characters',
-                },
+              {...register('publication', {
+                required: 'Publication is required!',
               })}
-              type="password"
+              type="date"
               className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-blue-700 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
               placeholder=" "
             />
             <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-700 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-blue-700 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-blue-700 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-              Password
+              Publication
             </label>
-            {errors?.password && (
+            {errors?.publication && (
               <p className="text-red-600 text-sm font-semibold">
-                {errors?.password.message}
+                {errors?.publication.message}
               </p>
             )}
+          </div>
+          <div className="relative h-11 w-full min-w-[200px]">
+            <input
+              {...register('imageUrl')}
+              type="text"
+              className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-blue-700 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+              placeholder=" "
+            />
+            <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-700 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-blue-700 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-blue-700 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+              Image Url
+            </label>
           </div>
         </div>
         <button

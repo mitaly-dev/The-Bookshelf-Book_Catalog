@@ -15,9 +15,15 @@ const SignIn = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      console.log('dataaaaaaaaaaaa', data);
       toast.success(data?.message);
       navigate('/');
-      localStorage.setItem('Bookshelf_token', data.data.accessToken);
+
+      const localStorageData: { accessToken: string; email: string } = {
+        accessToken: data.data.accessToken,
+        email: data.data.email,
+      };
+      localStorage.setItem('Bookshelf-Info', JSON.stringify(localStorageData));
     }
     if (isError) {
       toast.error('Somthing is wrong');

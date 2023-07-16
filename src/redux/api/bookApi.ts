@@ -1,34 +1,50 @@
+import { userInfoFromLocalstorage } from '@/utils/utils';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+const userInfo = userInfoFromLocalstorage();
 
 const productApi = createApi({
   reducerPath: 'auth',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
-  tagTypes: ['comments'],
+  tagTypes: ['Books'],
   endpoints: (builder) => ({
     getBooks: builder.query({
-      query: () => '/books',
+      query: () => '/api/v1/book',
     }),
-    singleProduct: builder.query({
-      query: (id) => `/product/${id}`,
+    getSingleBook: builder.query({
+      query: (id) => `/api/v1/book/${id}`,
     }),
-    postComment: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/comment/${id}`,
+    addNewBook: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/book`,
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['comments'],
+      invalidatesTags: ['Books'],
     }),
-    getComment: builder.query({
-      query: (id) => `/comment/${id}`,
-      providesTags: ['comments'],
+    updateBook: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/api/v1/book/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Books'],
+    }),
+    deleteBook: builder.mutation({
+      query: (id) => ({
+        url: `/api/v1/book/${id}`,
+        method: 'DELETE',
+        headers: {
+          authorization: `Bearer ${userInfo.accessToken}}`,
+        },
+      }),
+      invalidatesTags: ['Books'],
     }),
   }),
 });
 
 export const {
-  useGetCommentQuery,
   useGetBooksQuery,
-  usePostCommentMutation,
-  useSingleProductQuery,
+  useGetSingleBookQuery,
+  useAddNewBookMutation,
+  useUpdateBookMutation,
 } = productApi;
