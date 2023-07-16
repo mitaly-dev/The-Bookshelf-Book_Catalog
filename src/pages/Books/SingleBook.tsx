@@ -94,6 +94,24 @@ const SingleBook = () => {
                   Delete
                 </button>
               </div>
+              <div className="my-3">
+                <h3 className="font-semibold">Give a Review </h3>
+                <form action="">
+                  <textarea
+                    name=""
+                    id=""
+                    cols="40"
+                    rows="4"
+                    className="border rounded-lg px-2 py-2"
+                  ></textarea>
+                  <button
+                    type="submit"
+                    className="bg-blue-800   hover:bg-blue-500 text-white w-24 py-2 text-center  rounded-lg"
+                  >
+                    Submit
+                  </button>
+                </form>
+              </div>
             </div>
             <div></div>
           </div>
