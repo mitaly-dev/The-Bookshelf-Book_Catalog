@@ -6,8 +6,12 @@ const Card = ({ book }) => {
   return (
     <div>
       <div className="relative flex max-w-[24rem] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md border h-96">
-        <div className="relative m-0 bg-transparent  text-gray-700 shadow-none rounded-t-lg w-full h-full border">
-          <img src={imageUrl} alt="ui/ux review check w-full h-[100%]" />
+        <div className="flex justify-center items-center m-0 bg-transparent  text-gray-700 shadow-none rounded-t-lg h-48 border rounded p-2">
+          <img
+            src={imageUrl ? imageUrl : 'https://i.ibb.co/CtRJv8S/book2.jpg'}
+            alt="ui/ux review check "
+            className="w-full h-full object-contain"
+          />
         </div>
         <div className="px-2 pb-4">
           <span className="font-semibold capitalize text-sm text-gray-500">

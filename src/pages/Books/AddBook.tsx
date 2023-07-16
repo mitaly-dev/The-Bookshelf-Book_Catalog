@@ -48,9 +48,6 @@ const AddBook = () => {
   } = useForm<MyInputTypes>();
 
   const createUserHandle = (data: MyInputTypes) => {
-    if (data.imageUrl == '') {
-      data.imageUrl = 'https://i.ibb.co/CtRJv8S/book2.jpg';
-    }
     const allData = { ...data, userEmail: userInfo?.email };
     addNewBook(allData);
   };
