@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Card = ({ book }) => {
-  const { title, author, publication, userEmail, imageUrl } = book;
+  const { title, author, publication, userEmail, imageUrl, genre } = book;
   return (
     <div>
       <div className="relative flex max-w-[24rem] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md border h-96">
@@ -15,6 +15,9 @@ const Card = ({ book }) => {
           </h4>
           <p className="block font-sans text-base font-normal leading-relaxed text-inherit antialiased">
             Author Name : {author}
+          </p>
+          <p className="block font-sans text-base font-normal leading-relaxed text-inherit antialiased">
+            Genree : {genre}
           </p>
           <p className="block font-sans text-base font-normal leading-relaxed text-inherit antialiased">
             Publication Date : {publication}
