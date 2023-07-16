@@ -1,15 +1,36 @@
 import { useGetSingleBookQuery } from '@/redux/api/bookApi';
+import { userInfoFromLocalstorage } from '@/utils/utils';
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const SingleBook = () => {
+  const navigate = useNavigate();
+  const user = userInfoFromLocalstorage;
   const { id } = useParams();
   const { data, isLoading, isError, isSuccess } = useGetSingleBookQuery(id);
-  console.log('dataaaaaaaaaaaaaa.data', data?.data);
   if (isLoading) {
-    return <p>loading...</p>;
+    return <p>Loading..</p>;
   }
-  const { title, author, publication, userEmail, imageUrl, genre } = data.data;
+
+  const {
+    title,
+    author,
+    publication,
+    userEmail,
+    imageUrl,
+    genre,
+    _id: userId,
+  } = data.data;
+
+  const handleEditButton = () => {
+    console.log('user', user?.email, 'userEmail', userEmail);
+    if (user?.email !== userEmail) {
+      return toast.error('You are not authorized to edit this book!');
+    }
+    console.log('you are authorized');
+    navigate(`/update-book/${userId}`);
+  };
 
   return (
     <>
@@ -35,12 +56,12 @@ const SingleBook = () => {
                 Publication Date : {publication}
               </p>
               <div className="mt-3 flex gap-2">
-                <Link
-                  to={`/book/${data._id}`}
+                <button
+                  onClick={() => handleEditButton(userId)}
                   className="bg-blue-800  hover:bg-blue-500 text-white w-24 py-2 text-center  rounded-lg"
                 >
                   Edit
-                </Link>
+                </button>
                 <button className="bg-black hover:bg-gray-700 text-white py-2 rounded-lg w-24">
                   Delete
                 </button>

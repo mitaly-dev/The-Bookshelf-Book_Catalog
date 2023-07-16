@@ -1,17 +1,33 @@
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
-import { useAddNewBookMutation } from '@/redux/api/bookApi';
+import {
+  useAddNewBookMutation,
+  useGetSingleBookQuery,
+} from '@/redux/api/bookApi';
 import { userInfoFromLocalstorage } from '@/utils/utils';
 
-const AddBook = () => {
+const UpdateBook = () => {
   const navigate = useNavigate();
-  const [addNewBook, { data, isLoading, isError, isSuccess, error }] =
-    useAddNewBookMutation();
+  const user = userInfoFromLocalstorage;
+  const { id } = useParams();
+  const { data, isLoading, isError, isSuccess, error } =
+    useGetSingleBookQuery(id);
 
-  const userInfo = userInfoFromLocalstorage;
+  if (isLoading) {
+    return <p>Loading..</p>;
+  }
 
+  const {
+    title,
+    author,
+    publication,
+    userEmail,
+    imageUrl,
+    genre,
+    _id: userId,
+  } = data.data;
   // title: string;
   // author: string;
   // genre: string;
@@ -29,15 +45,15 @@ const AddBook = () => {
     userEmail: string;
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(data?.message);
-      navigate('/all-books');
-    }
-    if (isError) {
-      toast.error(error?.data?.message);
-    }
-  }, [isSuccess, isError, data?.message]);
+  //   useEffect(() => {
+  //     if (isSuccess) {
+  //       toast.success(data?.message);
+  //       navigate('/all-books');
+  //     }
+  //     if (isError) {
+  //       toast.error(error?.data?.message);
+  //     }
+  //   }, [isSuccess, isError, data?.message]);
 
   const {
     register,
@@ -47,23 +63,24 @@ const AddBook = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
   } = useForm<MyInputTypes>();
 
-  const createUserHandle = (data: MyInputTypes) => {
+  const updateUserHandle = (data: MyInputTypes) => {
     if (data.imageUrl == '') {
-      data.imageUrl = 'https://i.ibb.co/CtRJv8S/book2.jpg';
+      data.imageUrl = 'https://i.ibb.co/7b2Gx0B/book.png';
     }
-    const allData = { ...data, userEmail: userInfo?.email };
-    addNewBook(allData);
+    const allData = { ...data, userEmail: user?.email };
+    console.log(data);
+    // addNewBook(allData);
   };
   return (
     <section className="relative flex flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none h-[80vh] justify-center items-center w-5/12 border m-auto my-10">
       <h4 className="block font-sans text-2xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-        Add New Book
+        Update Book
       </h4>
       <p className="mt-1 block font-sans text-base font-normal leading-relaxed text-gray-700 antialiased">
-        Enter details to update Book!
+        Enter details to create Book!
       </p>
       <form
-        onSubmit={handleSubmit(createUserHandle)}
+        onSubmit={handleSubmit(updateUserHandle)}
         className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
       >
         <div className="mb-4 flex flex-col gap-6">
@@ -168,11 +185,11 @@ const AddBook = () => {
           type="submit"
           data-ripple-light="true"
         >
-          Create Book
+          Update Book
         </button>
       </form>
     </section>
   );
 };
 
-export default AddBook;
+export default UpdateBook;
