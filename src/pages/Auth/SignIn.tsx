@@ -20,7 +20,7 @@ const SignIn = () => {
       localStorage.setItem('Bookshelf_token', data.data.accessToken);
     }
     if (isError) {
-      toast.error(error?.data?.message);
+      toast.error('Somthing is wrong');
     }
   }, [isSuccess, isError]);
 
