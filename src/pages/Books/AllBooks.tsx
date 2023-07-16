@@ -1,7 +1,12 @@
+import Card from '@/components/Card';
+import { useGetAllBooksQuery } from '@/redux/api/bookApi';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const AllBooks = () => {
+  const { data, isLoading, isSuccess, isError } =
+    useGetAllBooksQuery(undefined);
+  console.log('books', data);
   return (
     <section className="my-10 px-20">
       <div className="flex justify-end">
@@ -26,6 +31,11 @@ const AllBooks = () => {
           </svg>
           Add New Book
         </Link>
+      </div>
+      <div>
+        {data?.data?.map((book: any) => (
+          <Card key={book._id} book={book} />
+        ))}
       </div>
     </section>
   );

@@ -1,13 +1,11 @@
-import { userInfoFromLocalstorage } from '@/utils/utils';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-const userInfo = userInfoFromLocalstorage();
 
-const productApi = createApi({
-  reducerPath: 'auth',
+export const bookApi = createApi({
+  reducerPath: 'book',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
   tagTypes: ['Books'],
   endpoints: (builder) => ({
-    getBooks: builder.query({
+    getAllBooks: builder.query({
       query: () => '/api/v1/book',
     }),
     getSingleBook: builder.query({
@@ -33,9 +31,6 @@ const productApi = createApi({
       query: (id) => ({
         url: `/api/v1/book/${id}`,
         method: 'DELETE',
-        headers: {
-          authorization: `Bearer ${userInfo.accessToken}}`,
-        },
       }),
       invalidatesTags: ['Books'],
     }),
@@ -43,8 +38,8 @@ const productApi = createApi({
 });
 
 export const {
-  useGetBooksQuery,
+  useGetAllBooksQuery,
   useGetSingleBookQuery,
   useAddNewBookMutation,
   useUpdateBookMutation,
-} = productApi;
+} = bookApi;

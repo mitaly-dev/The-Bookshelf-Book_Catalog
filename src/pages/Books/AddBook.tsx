@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import {
-  useCreateUserMutation,
-  useLoginUserMutation,
-} from '@/redux/api/authApi';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAddNewBookMutation } from '@/redux/api/bookApi';
 import { userInfoFromLocalstorage } from '@/utils/utils';
@@ -14,7 +10,7 @@ const AddBook = () => {
   const [addNewBook, { data, isLoading, isError, isSuccess, error }] =
     useAddNewBookMutation();
 
-  const userInfo = userInfoFromLocalstorage();
+  const userInfo = userInfoFromLocalstorage;
 
   // title: string;
   // author: string;
