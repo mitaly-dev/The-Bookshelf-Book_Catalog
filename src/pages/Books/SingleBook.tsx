@@ -1,4 +1,5 @@
 import {
+  useAddBookReviewMutation,
   useDeleteBookMutation,
   useGetSingleBookQuery,
 } from '@/redux/api/bookApi';
@@ -14,20 +15,23 @@ const SingleBook = () => {
   const dispatch = useDispatch();
   const user = userInfoFromLocalstorage;
   const { id } = useParams();
-  const { data, isLoading, isError, isSuccess } = useGetSingleBookQuery(id);
+  const { data, isLoading } = useGetSingleBookQuery(id);
   const [isDelete, setIsDelete] = useState(false);
   const [deleteBook] = useDeleteBookMutation();
+  const [addBookReview, { isSuccess }] = useAddBookReviewMutation();
+  const [review, setReview] = useState('');
 
   if (isLoading) {
     return <p>Loading..</p>;
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  //   useEffect(() => {
-  //     if (deleteIsSuccess) {
-  //       return toast.success('delete success');
-  //     }
-  //   }, [deleteIsSuccess]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     console.log('issu', data);
+  //     // toast.success(data.message);
+  //   }
+  // }, [data, isSuccess]);
 
   const {
     title,
@@ -37,7 +41,10 @@ const SingleBook = () => {
     imageUrl,
     genre,
     _id: userId,
+    reviews,
   } = data?.data || {};
+
+  console.log('reviews,', reviews);
 
   const handleEditButton = (userId: string) => {
     if (user?.email !== userEmail) {
@@ -54,6 +61,17 @@ const SingleBook = () => {
     if (isTrue) {
       deleteBook(id);
       navigate('/all-books');
+    }
+  };
+
+  const handleReview = (e: any) => {
+    e.preventDefault();
+    if (review) {
+      const data = { review, user: user.email };
+      addBookReview({ id, data });
+      setReview('');
+    } else {
+      toast.error('Please write a review!');
     }
   };
 
@@ -96,10 +114,11 @@ const SingleBook = () => {
               </div>
               <div className="my-3">
                 <h3 className="font-semibold">Give a Review </h3>
-                <form action="">
+                <form onSubmit={(e) => handleReview(e)}>
                   <textarea
-                    name=""
-                    id=""
+                    onChange={(e) => setReview(e.target.value)}
+                    value={review}
+                    name="review"
                     cols="40"
                     rows="4"
                     className="border rounded-lg px-2 py-2"
@@ -111,6 +130,21 @@ const SingleBook = () => {
                     Submit
                   </button>
                 </form>
+              </div>
+              <div>
+                {reviews?.map((review: any) => {
+                  return (
+                    <div className="flex gap-2">
+                      <span className="w-7 h-7 flex items-center justify-center mt-1 text-sm capitalize rounded-full bg-gray-500 text-white">
+                        {review?.user?.slice(0, 1)}
+                      </span>
+                      <div>
+                        <p className="text-sm">{review?.user}</p>
+                        <p>{review?.review}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div></div>

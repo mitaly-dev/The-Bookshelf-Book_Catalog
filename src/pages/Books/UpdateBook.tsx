@@ -6,7 +6,6 @@ import {
   useGetSingleBookQuery,
   useUpdateBookInfoMutation,
 } from '@/redux/api/bookApi';
-import { userInfoFromLocalstorage } from '@/utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBook } from '@/redux/features/bookSlice';
 import { useAppSelector } from '@/redux/hook';

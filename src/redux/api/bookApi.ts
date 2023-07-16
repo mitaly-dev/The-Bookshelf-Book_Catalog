@@ -43,6 +43,14 @@ export const bookApi = createApi({
       }),
       invalidatesTags: ['Books'],
     }),
+    addBookReview: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/api/v1/book/add-review/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Books'],
+    }),
   }),
 });
 
@@ -53,4 +61,5 @@ export const {
   useUpdateBookInfoMutation,
   useDeleteBookMutation,
   useGetFeaturedBookQuery,
+  useAddBookReviewMutation,
 } = bookApi;

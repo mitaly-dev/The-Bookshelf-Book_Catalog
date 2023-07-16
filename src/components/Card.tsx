@@ -27,8 +27,27 @@ const Card = ({ book }) => {
             Publication Date : {publication}
           </p>
           <div className="mt-3 flex justify-between">
-            <button className="bg-blue-300 text-white px-5 py-2 rounded-lg">
+            <button className="bg-blue-300  px-4 py-2 rounded-lg flex gap-2 items-center">
               Add Wishlist
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                fill="currentColor"
+                class="bi bi-heart-fill"
+                viewBox="0 0 16 16"
+                id="IconChangeColor"
+              >
+                {' '}
+                <path
+                  fill-rule="evenodd"
+                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                  id="mainIconPathAttribute"
+                  fill="#ff006a"
+                  stroke-width="0"
+                  stroke="#ff0000"
+                ></path>{' '}
+              </svg>
             </button>
             <Link to={`/book/${book._id}`} className="text-sm text-blue-600 ">
               View
