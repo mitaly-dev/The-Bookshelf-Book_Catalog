@@ -32,7 +32,7 @@ const AllBooks = () => {
           Add New Book
         </Link>
       </div>
-      <div>
+      <div className="grid grid-cols-4 gap-3 my-10">
         {data?.data?.map((book: any) => (
           <Card key={book._id} book={book} />
         ))}
