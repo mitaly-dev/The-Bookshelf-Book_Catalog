@@ -67,7 +67,9 @@ const SignIn = () => {
               Email
             </label>
             {errors?.email && (
-              <p className="text-red-600 mb-6">{errors?.email.message}</p>
+              <p className="text-red-600 text-sm font-semibold">
+                {errors?.email.message}
+              </p>
             )}
           </div>
           <div className="relative h-11 w-full min-w-[200px]">
@@ -83,7 +85,9 @@ const SignIn = () => {
               Password
             </label>
             {errors?.password && (
-              <p className="text-red-600 mb-2">{errors?.password.message}</p>
+              <p className="text-red-600 text-sm font-semibold">
+                {errors?.password.message}
+              </p>
             )}
           </div>
         </div>

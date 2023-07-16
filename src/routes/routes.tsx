@@ -2,9 +2,10 @@ import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/Home';
 import App from '../App';
 import NotFound from '../pages/NotFound';
-import AllBooks from '@/pages/AllBooks';
-import SignIn from '@/pages/SignIn';
-import SignUp from '@/pages/SignUp';
+import AllBooks from '@/pages/Books/AllBooks';
+import SignIn from '@/pages/Auth/SignIn';
+import SignUp from '@/pages/Auth/SignUp';
+import AddBook from '@/pages/Books/AddBook';
 
 const routes = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const routes = createBrowserRouter([
       {
         path: '/user/signup',
         element: <SignUp />,
+      },
+      {
+        path: '/add-new-book',
+        element: <AddBook />,
       },
     ],
   },
