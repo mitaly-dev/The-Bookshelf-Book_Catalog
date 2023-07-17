@@ -1,9 +1,43 @@
-import React, { useState } from 'react';
+import { useUpdateBookInfoMutation } from '@/redux/api/bookApi';
+import {
+  useAddBookWishlistMutation,
+  useGetBookWishlistQuery,
+} from '@/redux/api/wishlistApi';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const Card = ({ book }) => {
-  const [Wishlist, setWishlist] = useState(false);
-  const { title, author, publication, userEmail, imageUrl, genre } = book;
+  const [addBookWishlist, { data: wishData, isLoading, isError, isSuccess }] =
+    useAddBookWishlistMutation();
+
+  const { data: wishlist } = useGetBookWishlistQuery(undefined);
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('wis', wishData?.message);
+      toast.success(wishData?.message);
+    }
+  }, [isSuccess]);
+
+  console.log(' data all wish ', wishlist?.data);
+
+  const {
+    title,
+    author,
+    publication,
+    userEmail,
+    imageUrl,
+    genre,
+    _id: id,
+    wishlist: myWishlist,
+  } = book;
+
+  const handleWishlist = () => {
+    console.log('!wishlist my wish');
+    addBookWishlist({ book, bookId: id });
+  };
+  console.log('wish', wishlist);
   return (
     <div>
       <div className="relative flex max-w-[24rem] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md border h-96">
@@ -14,14 +48,16 @@ const Card = ({ book }) => {
             className="w-full h-full object-contain"
           />
           <div className="flex flex-col gap-3 absolute right-3 top-3">
-            <button onClick={() => setWishlist(!Wishlist)}>
-              {Wishlist ? (
+            <button onClick={() => handleWishlist()}>
+              {wishlist?.data?.data?.find(
+                (x: any) => x?.bookId === book?._id
+              ) ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
                   height="22"
                   fill="currentColor"
-                  class="bi bi-heart-fill"
+                  className="bi bi-heart-fill"
                   viewBox="0 0 16 16"
                   id="IconChangeColor"
                 >
@@ -40,7 +76,7 @@ const Card = ({ book }) => {
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
                   height="22"
-                  class="bi bi-heart"
+                  className="bi bi-heart"
                   viewBox="0 0 16 16"
                   id="IconChangeColor"
                   fill="#ff006a"
@@ -59,7 +95,7 @@ const Card = ({ book }) => {
                 width="24"
                 height="24"
                 fill="currentColor"
-                class="bi bi-eye"
+                className="bi bi-eye"
                 viewBox="0 0 16 16"
                 id="IconChangeColor"
               >
@@ -98,7 +134,7 @@ const Card = ({ book }) => {
                 width="22"
                 height="22"
                 fill="currentColor"
-                class="bi bi-heart-fill"
+                className="bi bi-heart-fill"
                 viewBox="0 0 16 16"
                 id="IconChangeColor"
               >
@@ -120,7 +156,7 @@ const Card = ({ book }) => {
                 width="22"
                 height="22"
                 fill="currentColor"
-                class="bi bi-heart-fill"
+                className="bi bi-heart-fill"
                 viewBox="0 0 16 16"
                 id="IconChangeColor"
               >

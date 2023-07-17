@@ -3,16 +3,22 @@ import { authApi } from './api/authApi';
 import { bookApi } from './api/bookApi';
 import updateBookReducer from './features/bookSlice';
 import searchReducer from './features/searchSlice';
+import { wishlistApi } from './api/wishlistApi';
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [bookApi.reducerPath]: bookApi.reducer,
+    [wishlistApi.reducerPath]: wishlistApi.reducer,
     updateBook: updateBookReducer,
     search: searchReducer,
     // user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, bookApi.middleware),
+    getDefaultMiddleware().concat(
+      authApi.middleware,
+      bookApi.middleware,
+      wishlistApi.middleware
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
