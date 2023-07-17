@@ -13,7 +13,7 @@ const FeaturedBook = () => {
       </h3>
 
       {data?.data?.length > 0 ? (
-        <div className="grid grid-cols-4 gap-3 my-10">
+        <div className="grid grid-cols-4 gap-4 my-10">
           {data?.data?.map((book: any) => (
             <Card key={book._id} book={book} />
           ))}

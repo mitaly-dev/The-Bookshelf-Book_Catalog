@@ -1,7 +1,9 @@
 import {
   useAddBookWishlistMutation,
+  useAddFinishedBookMutation,
   useAddPlanToReadBookMutation,
   useGetBookWishlistQuery,
+  useGetFinishedBooksQuery,
   useGetPlanToReadBooksQuery,
 } from '@/redux/api/bookApi';
 import { userInfoFromLocalstorage } from '@/utils/utils';
@@ -19,8 +21,18 @@ const Card = ({ book }: any) => {
     { data: planToReadData, isError: isPlanError, isSuccess: isPlanSuccess },
   ] = useAddPlanToReadBookMutation();
 
+  const [
+    addFinishedBook,
+    {
+      data: finishedData,
+      isError: isFinishedError,
+      isSuccess: isFinishedSuccess,
+    },
+  ] = useAddFinishedBookMutation();
+
   const { data: wishlist } = useGetBookWishlistQuery(undefined);
   const { data: planToReadBooks } = useGetPlanToReadBooksQuery(undefined);
+  const { data: finishedBooks } = useGetFinishedBooksQuery(undefined);
 
   console.log('planToReadBooks', planToReadBooks);
   const {
@@ -75,14 +87,14 @@ const Card = ({ book }: any) => {
   // Finished book
 
   useEffect(() => {
-    if (isPlanSuccess) {
-      toast.success(planToReadData?.message);
+    if (isFinishedSuccess) {
+      toast.success(finishedData?.message);
     }
-  }, [isPlanSuccess]);
+  }, [isFinishedSuccess]);
 
   const handleFinishedBook = (book: any) => {
     if (user) {
-      addPlanToReadBook({
+      addFinishedBook({
         book,
         bookId: id,
         userEmail: user?.email,
@@ -204,7 +216,11 @@ const Card = ({ book }: any) => {
                     ? 'green'
                     : 'currentColor'
                 }`}
-                class="bi bi-check"
+                className={`bi bi-check ${
+                  planToReadBooks?.data?.data?.find(
+                    (x: any) => x?.bookId === book?._id
+                  ) && 'border-2 border-green-600 rounded-full'
+                }`}
                 viewBox="0 0 16 16"
                 id="IconChangeColor"
               >
@@ -215,14 +231,27 @@ const Card = ({ book }: any) => {
                 ></path>{' '}
               </svg>
             </button>
-            <button className="bg-blue-300  px-3 text-sm py-2 rounded-lg flex gap-2 items-center justify-between">
+            <button
+              onClick={() => handleFinishedBook(book)}
+              className="bg-blue-300  px-3 text-sm py-2 rounded-lg flex gap-2 items-center justify-between"
+            >
               <span> Finished</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="30"
                 height="30"
-                fill="currentColor"
-                class="bi bi-check"
+                fill={` ${
+                  finishedBooks?.data?.data?.find(
+                    (x: any) => x?.bookId === book?._id
+                  )
+                    ? 'green'
+                    : 'currentColor'
+                }`}
+                className={`bi bi-check ${
+                  finishedBooks?.data?.data?.find(
+                    (x: any) => x?.bookId === book?._id
+                  ) && 'border-2 border-green-600 rounded-full'
+                }`}
                 viewBox="0 0 16 16"
                 id="IconChangeColor"
               >

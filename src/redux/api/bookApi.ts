@@ -90,6 +90,18 @@ export const bookApi = createApi({
       query: () => `/api/v1/plan-to-read`,
       providesTags: ['Books'],
     }),
+    addFinishedBook: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/finished-book/add-finished-book`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Books'],
+    }),
+    getFinishedBooks: builder.query({
+      query: () => `/api/v1/finished-book`,
+      providesTags: ['Books'],
+    }),
   }),
 });
 
@@ -105,4 +117,6 @@ export const {
   useAddBookWishlistMutation,
   useAddPlanToReadBookMutation,
   useGetPlanToReadBooksQuery,
+  useAddFinishedBookMutation,
+  useGetFinishedBooksQuery,
 } = bookApi;
