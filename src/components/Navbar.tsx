@@ -1,7 +1,28 @@
+import { useGetBookWishlistQuery } from '@/redux/api/bookApi';
+import { userInfoFromLocalstorage } from '@/utils/utils';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const { data: wishlist, isLoading } = useGetBookWishlistQuery(undefined);
+  const user: string | null = JSON.parse(
+    localStorage.getItem('Bookshelf-Info') || 'null'
+  ) as string | null;
+  const navigate = useNavigate();
+
+  console.log('wishlist', wishlist);
+
+  if (isLoading) {
+    return <p>loading...</p>;
+  }
+
+  const logoutHandle = () => {
+    localStorage.removeItem('Bookshelf-Info');
+    toast.success('Log out successfully');
+    navigate('/');
+    window.location.reload();
+  };
   return (
     <nav className="sticky inset-0 z-10 block h-max w-full max-w-full rounded-none border border-white/80 bg-white bg-opacity-80 py-1 text-white shadow-md backdrop-blur-2xl backdrop-saturate-200 lg:px-20 lg:py-2">
       <div className="flex items-center text-gray-900">
@@ -53,14 +74,19 @@ const Navbar = () => {
                 stroke-linejoin="round"
               />{' '}
             </svg>
-            <div className="flex flex-col text-sm font-semibold ">
-              <Link to="/user/signin" className="hover:text-blue-700">
-                Sign In
-              </Link>
-              <Link to="/user/signup" className="hover:text-blue-700">
-                Sign Up
-              </Link>
-            </div>
+
+            {user?.accessToken ? (
+              <button onClick={logoutHandle}>Log Out</button>
+            ) : (
+              <div className="flex flex-col text-sm font-semibold ">
+                <Link to="/user/signin" className="hover:text-blue-700">
+                  Sign In
+                </Link>
+                <Link to="/user/signup" className="hover:text-blue-700">
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-7">
             <div className="relative">
@@ -85,7 +111,7 @@ const Navbar = () => {
                 2
               </span>
             </div>
-            <div className="relative">
+            <Link to="/book/wishlist" className="relative">
               <button>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -104,9 +130,9 @@ const Navbar = () => {
                 </svg>
               </button>
               <span className="absolute -right-4 -top-2 w-5 h-5 text-[10px] rounded-full bg-black text-white flex justify-center items-center">
-                2
+                {wishlist.data?.data?.length}
               </span>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

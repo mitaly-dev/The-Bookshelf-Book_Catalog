@@ -1,9 +1,9 @@
 import Card from '@/components/Card';
 import { useGetAllBooksQuery } from '@/redux/api/bookApi';
+import { handlePublicationYear } from '@/redux/features/publishYearSlice';
 import { setSearchTermValue } from '@/redux/features/searchSlice';
-import { useAppSelector } from '@/redux/hook';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const AllBooks = () => {
@@ -13,14 +13,13 @@ const AllBooks = () => {
     publicationYear: publicationYears,
   } = useAppSelector((state) => state.search);
 
-  console.log('earchTerms', searchTerms);
-
   const [searchTerm, setSearchTerm] = useState(searchTerms);
   const [genre, setGenre] = useState(genres);
   const [publicationYear, setPublicationYear] = useState(publicationYears);
   const [allPublicationYear, setAllPublicationYear] = useState([]);
+  const dispatch = useAppDispatch();
 
-  const dispatch = useDispatch();
+  const { allYears } = useAppSelector((state) => state.publicationYear);
   const { data, isLoading, isSuccess, isError } = useGetAllBooksQuery({
     searchTerm,
     genre,
@@ -29,18 +28,22 @@ const AllBooks = () => {
 
   useEffect(() => {
     if (genre) {
-      data?.data?.data?.forEach((book: any) => {
-        if (!allPublicationYear.includes(book?.publicationYear)) {
-          console.log('true', book?.publicationYear);
-          setAllPublicationYear([...allPublicationYear, book?.publicationYear]);
-        }
-      });
+      dispatch(handlePublicationYear(data?.data?.data));
     }
-  }, [genre]);
+  }, [data?.data?.data, dispatch, genre]);
 
   const handleSearchTerm = (e: any) => {
     dispatch(setSearchTermValue(e.target.value));
     setSearchTerm(e.target.value);
+  };
+
+  const handleSetGenre = (e: any) => {
+    if (e.target.value !== 'reset') {
+      setGenre(e.target.value);
+    } else {
+      setGenre('');
+      setPublicationYear('');
+    }
   };
   return (
     <section className="my-10 px-20">
@@ -76,7 +79,7 @@ const AllBooks = () => {
           placeholder="Search with author,title,genre"
         />
         <select
-          onChange={(e) => setGenre(e.target.value)}
+          onChange={(e) => handleSetGenre(e)}
           className="px-5 py-2 rounded-lg border-2 border-blue-700"
         >
           <option value="">Select Genre</option>
@@ -86,15 +89,18 @@ const AllBooks = () => {
           <option value="Romance">Romance</option>
           <option value="Science Fiction">Science Fiction</option>
           <option value="Classic Literature">Classic Literature</option>
-          <option value="">Reset</option>
+          <option value="reset">Reset</option>
         </select>
         {/* publication year */}
         {genre !== '' && (
           <select
-            onChange={(e) => setPublicationYear(e.target.value)}
+            onChange={(e) =>
+              setPublicationYear(e.target.value ? e.target.value : '')
+            }
             className="px-5 py-2 rounded-lg border-2 border-blue-700"
           >
-            {allPublicationYear?.map((year) => {
+            <option value="">Select</option>
+            {allYears?.map((year) => {
               return <option value={year}>{year}</option>;
             })}
             <option value="">Reset</option>

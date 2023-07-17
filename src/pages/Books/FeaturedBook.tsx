@@ -4,11 +4,13 @@ import { useGetFeaturedBookQuery } from '@/redux/api/bookApi';
 const FeaturedBook = () => {
   const { data, isLoading, isSuccess, isError } =
     useGetFeaturedBookQuery(undefined);
-  console.log('data', data?.data);
+  console.log('data', data);
 
   return (
     <section className="my-10 px-20">
-      <h3 className="text-blue-800 font-semibold text-xl mb-3">All Books</h3>
+      <h3 className="text-blue-800 font-semibold text-xl mb-3">
+        Featured Books
+      </h3>
 
       {data?.data?.length > 0 ? (
         <div className="grid grid-cols-4 gap-3 my-10">

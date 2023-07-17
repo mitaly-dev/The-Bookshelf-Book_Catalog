@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useLoginUserMutation } from '@/redux/api/authApi';
 import { toast } from 'react-hot-toast';
+import { userInfoFromLocalstorage } from '@/utils/utils';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const SignIn = () => {
         email: data.data.email,
       };
       localStorage.setItem('Bookshelf-Info', JSON.stringify(localStorageData));
+      window.location.reload();
     }
     if (isError) {
       toast.error('Somthing is wrong');

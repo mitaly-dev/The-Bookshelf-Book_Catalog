@@ -1,27 +1,28 @@
-import { useUpdateBookInfoMutation } from '@/redux/api/bookApi';
 import {
   useAddBookWishlistMutation,
+  useAddPlanToReadBookMutation,
   useGetBookWishlistQuery,
-} from '@/redux/api/wishlistApi';
+  useGetPlanToReadBooksQuery,
+} from '@/redux/api/bookApi';
+import { userInfoFromLocalstorage } from '@/utils/utils';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
-const Card = ({ book }) => {
-  const [addBookWishlist, { data: wishData, isLoading, isError, isSuccess }] =
+const Card = ({ book }: any) => {
+  const user = userInfoFromLocalstorage;
+  const [addBookWishlist, { data: wishData, isError, isSuccess }] =
     useAddBookWishlistMutation();
 
+  const [
+    addPlanToReadBook,
+    { data: planToReadData, isError: isPlanError, isSuccess: isPlanSuccess },
+  ] = useAddPlanToReadBookMutation();
+
   const { data: wishlist } = useGetBookWishlistQuery(undefined);
+  const { data: planToReadBooks } = useGetPlanToReadBooksQuery(undefined);
 
-  useEffect(() => {
-    if (isSuccess) {
-      console.log('wis', wishData?.message);
-      toast.success(wishData?.message);
-    }
-  }, [isSuccess]);
-
-  console.log(' data all wish ', wishlist?.data);
-
+  console.log('planToReadBooks', planToReadBooks);
   const {
     title,
     author,
@@ -30,25 +31,80 @@ const Card = ({ book }) => {
     imageUrl,
     genre,
     _id: id,
-    wishlist: myWishlist,
   } = book;
 
+  // added in wishlist
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(wishData?.message);
+    }
+  }, [isSuccess]);
   const handleWishlist = () => {
-    console.log('!wishlist my wish');
-    addBookWishlist({ book, bookId: id });
+    if (user) {
+      addBookWishlist({
+        book,
+        bookId: id,
+        userEmail: user?.email,
+      });
+    } else {
+      return toast.error('You are unauthorized,Please login your first!');
+    }
   };
-  console.log('wish', wishlist);
+
+  // plan to read book
+
+  useEffect(() => {
+    if (isPlanSuccess) {
+      toast.success(planToReadData?.message);
+    }
+  }, [isPlanSuccess]);
+
+  const handlePlaneToReadBook = (book: any) => {
+    if (user) {
+      addPlanToReadBook({
+        book,
+        bookId: id,
+        userEmail: user?.email,
+      });
+    } else {
+      return toast.error('You are unauthorized,Please login your first!');
+    }
+  };
+
+  // Finished book
+
+  useEffect(() => {
+    if (isPlanSuccess) {
+      toast.success(planToReadData?.message);
+    }
+  }, [isPlanSuccess]);
+
+  const handleFinishedBook = (book: any) => {
+    if (user) {
+      addPlanToReadBook({
+        book,
+        bookId: id,
+        userEmail: user?.email,
+      });
+    } else {
+      return toast.error('You are unauthorized,Please login your first!');
+    }
+  };
   return (
     <div>
-      <div className="relative flex max-w-[24rem] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md border h-96">
+      <div className="relative flex max-w-[24rem] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md border h-auto">
         <div className="relative flex justify-center items-center m-0 bg-transparent  text-gray-700 shadow-none rounded-t-lg h-48 border rounded p-2">
           <img
             src={imageUrl ? imageUrl : 'https://i.ibb.co/CtRJv8S/book2.jpg'}
             alt="ui/ux review check "
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
           />
           <div className="flex flex-col gap-3 absolute right-3 top-3">
-            <button onClick={() => handleWishlist()}>
+            <button
+              onClick={() => handleWishlist()}
+              className="bg-red-200 p-2 rounded-full"
+            >
               {wishlist?.data?.data?.find(
                 (x: any) => x?.bookId === book?._id
               ) ? (
@@ -89,11 +145,14 @@ const Card = ({ book }) => {
                 </svg>
               )}
             </button>
-            <Link to={`/book/${book._id}`}>
+            <Link
+              to={`/book/${book._id}`}
+              className="bg-gray-300 p-2 rounded-full"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="22"
+                height="22"
                 fill="currentColor"
                 className="bi bi-eye"
                 viewBox="0 0 16 16"
@@ -117,64 +176,64 @@ const Card = ({ book }) => {
             {genre}
           </span>
           <h4 className="block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased mb-3 capitalize">
-            {title}
+            {title?.length > 10 ? `${title.slice(0, 10)}...` : title}
           </h4>
           <p className="block font-sans text-base font-normal leading-relaxed text-inherit antialiased">
-            Author Name : {author}
+            Author Name :{' '}
+            {author?.length > 10 ? `${author.slice(0, 10)}...` : title}
           </p>
           <p className="block font-sans text-base font-normal leading-relaxed text-inherit antialiased">
             Publication Date : {publication}
           </p>
 
-          <div className="mt-3 flex justify-between gap-2">
-            <button className="bg-blue-300  px-3 text-sm py-2 rounded-lg flex gap-2 items-center">
-              Add Wishlist
+          <div className="mt-3 flex flex-col justify-between gap-2">
+            <button
+              onClick={() => handlePlaneToReadBook(book)}
+              className="bg-blue-300  px-3 text-sm py-2 rounded-lg flex gap-2 items-center justify-between"
+            >
+              <span> Plan to read</span>
+
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                fill="currentColor"
-                className="bi bi-heart-fill"
+                width="30"
+                height="30"
+                fill={` ${
+                  planToReadBooks?.data?.data?.find(
+                    (x: any) => x?.bookId === book?._id
+                  )
+                    ? 'green'
+                    : 'currentColor'
+                }`}
+                class="bi bi-check"
                 viewBox="0 0 16 16"
                 id="IconChangeColor"
               >
                 {' '}
                 <path
-                  fill-rule="evenodd"
-                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                  d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"
                   id="mainIconPathAttribute"
-                  fill="#ff006a"
-                  stroke-width="0"
-                  stroke="#ff0000"
                 ></path>{' '}
               </svg>
             </button>
-            <button className="bg-blue-300  px-3 text-sm py-2 rounded-lg flex gap-2 items-center">
-              Plan to read
+            <button className="bg-blue-300  px-3 text-sm py-2 rounded-lg flex gap-2 items-center justify-between">
+              <span> Finished</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
+                width="30"
+                height="30"
                 fill="currentColor"
-                className="bi bi-heart-fill"
+                class="bi bi-check"
                 viewBox="0 0 16 16"
                 id="IconChangeColor"
               >
                 {' '}
                 <path
-                  fill-rule="evenodd"
-                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+                  d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"
                   id="mainIconPathAttribute"
-                  fill="#ff006a"
-                  stroke-width="0"
-                  stroke="#ff0000"
                 ></path>{' '}
               </svg>
             </button>
           </div>
-          <Link to={`/book/${book._id}`} className="text-sm text-blue-600 ">
-            View
-          </Link>
         </div>
         <div></div>
       </div>

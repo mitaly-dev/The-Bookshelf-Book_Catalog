@@ -1,8 +1,23 @@
+import { userInfoFromLocalstorage } from '@/utils/utils';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const bookApi = createApi({
   reducerPath: 'book',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:5000',
+    prepareHeaders: (headers, { getState }) => {
+      const user: { accessToken: string; email: string } | null =
+        userInfoFromLocalstorage ? userInfoFromLocalstorage : null;
+
+      // Add the authorization header to the existing headers
+      if (user) {
+        const token = user?.accessToken;
+        headers.set('authorization', `${token}`);
+      }
+
+      return headers;
+    },
+  }),
   tagTypes: ['Books'],
   endpoints: (builder) => ({
     getAllBooks: builder.query({
@@ -51,6 +66,30 @@ export const bookApi = createApi({
       }),
       invalidatesTags: ['Books'],
     }),
+    getBookWishlist: builder.query({
+      query: () => `/api/v1/wishlist`,
+      providesTags: ['Books'],
+    }),
+    addBookWishlist: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/wishlist/add-wishlist`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Books'],
+    }),
+    addPlanToReadBook: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/plan-to-read/add-planToRead`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Books'],
+    }),
+    getPlanToReadBooks: builder.query({
+      query: () => `/api/v1/plan-to-read`,
+      providesTags: ['Books'],
+    }),
   }),
 });
 
@@ -62,4 +101,8 @@ export const {
   useDeleteBookMutation,
   useGetFeaturedBookQuery,
   useAddBookReviewMutation,
+  useGetBookWishlistQuery,
+  useAddBookWishlistMutation,
+  useAddPlanToReadBookMutation,
+  useGetPlanToReadBooksQuery,
 } = bookApi;

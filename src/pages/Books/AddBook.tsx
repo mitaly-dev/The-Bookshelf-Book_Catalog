@@ -11,15 +11,6 @@ const AddBook = () => {
     useAddNewBookMutation();
 
   const userInfo = userInfoFromLocalstorage;
-
-  // title: string;
-  // author: string;
-  // genre: string;
-  // publication: string;
-  // imageUrl: string;
-  // userEmail: string;
-  // reviews: Ireview[];
-
   interface MyInputTypes {
     title: string;
     author: string;

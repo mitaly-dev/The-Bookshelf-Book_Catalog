@@ -3,47 +3,23 @@ import { authApi } from './api/authApi';
 import { bookApi } from './api/bookApi';
 import updateBookReducer from './features/bookSlice';
 import searchReducer from './features/searchSlice';
-import { wishlistApi } from './api/wishlistApi';
+import publishYearReducer from './features/publishYearSlice';
+import wishlistReducer from './features/wishlistSlice';
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [bookApi.reducerPath]: bookApi.reducer,
-    [wishlistApi.reducerPath]: wishlistApi.reducer,
     updateBook: updateBookReducer,
     search: searchReducer,
+    publicationYear: publishYearReducer,
+    wishlists: wishlistReducer,
     // user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      authApi.middleware,
-      bookApi.middleware,
-      wishlistApi.middleware
-    ),
+    getDefaultMiddleware().concat(authApi.middleware, bookApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export default store;
-
-// export const store = configureStore({
-//   reducer: {
-//     auth:authReducer,
-//     video:videoReducer,
-//     quizMark:quizMarkReducer,
-//     [apiSlice.reducerPath] : apiSlice.reducer,
-//     [videosApi.reducerPath] : videosApi.reducer,
-//     [assignmentsApi.reducerPath] : assignmentsApi.reducer,
-//     [assignmentMarkApi.reducerPath] : assignmentMarkApi.reducer,
-//     [quizzesApi.reducerPath] : quizzesApi.reducer,
-//     [quizMarkApi.reducerPath] : quizMarkApi.reducer,
-//   },
-//   middleware:getDefaultMiddlewares=>getDefaultMiddlewares().concat(
-//     apiSlice.middleware,
-//     videosApi.middleware,
-//     assignmentsApi.middleware,
-//     assignmentMarkApi.middleware,
-//     quizzesApi.middleware,
-//     quizMarkApi.middleware
-//     )
-// });

@@ -132,6 +132,9 @@ const SingleBook = () => {
                 </form>
               </div>
               <div>
+                <h3 className="font-semibold text-lg text-blue-800 my-2">
+                  Reviews
+                </h3>
                 {reviews?.map((review: any) => {
                   return (
                     <div className="flex gap-2">
