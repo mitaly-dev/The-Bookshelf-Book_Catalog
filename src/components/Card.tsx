@@ -34,7 +34,6 @@ const Card = ({ book }: any) => {
   const { data: planToReadBooks } = useGetPlanToReadBooksQuery(undefined);
   const { data: finishedBooks } = useGetFinishedBooksQuery(undefined);
 
-  console.log('planToReadBooks', planToReadBooks);
   const {
     title,
     author,
@@ -203,7 +202,7 @@ const Card = ({ book }: any) => {
               onClick={() => handlePlaneToReadBook(book)}
               className="bg-blue-300  px-3 text-sm py-2 rounded-lg flex gap-2 items-center justify-between"
             >
-              <span> Plan to read</span>
+              <span> Plan To Read</span>
 
               <svg
                 xmlns="http://www.w3.org/2000/svg"

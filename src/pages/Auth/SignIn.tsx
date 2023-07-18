@@ -16,7 +16,6 @@ const SignIn = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log('dataaaaaaaaaaaa', data);
       toast.success(data?.message);
       navigate('/');
 
@@ -28,7 +27,7 @@ const SignIn = () => {
       window.location.reload();
     }
     if (isError) {
-      toast.error('Somthing is wrong');
+      toast.error(error?.data?.message);
     }
   }, [isSuccess, isError]);
 

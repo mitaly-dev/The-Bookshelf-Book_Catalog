@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const bookApi = createApi({
   reducerPath: 'book',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000',
+    baseUrl: 'https://the-bookshelf.vercel.app',
     prepareHeaders: (headers, { getState }) => {
       const user: { accessToken: string; email: string } | null =
         userInfoFromLocalstorage ? userInfoFromLocalstorage : null;
@@ -22,9 +22,9 @@ export const bookApi = createApi({
   endpoints: (builder) => ({
     getAllBooks: builder.query({
       query: ({ searchTerm, genre, publicationYear }) =>
-        `/api/v1/book/?${searchTerm && `searchTerm=${searchTerm}`}${
-          genre && `&genre=${genre}`
-        }${publicationYear && `&publicationYear=${publicationYear}`}`,
+        `/api/v1/book/?${searchTerm && `searchTerm=${searchTerm}&`}${
+          genre && `genre=${genre}&`
+        }${publicationYear && genre && `&publicationYear=${publicationYear}`}`,
       providesTags: ['Books'],
     }),
     getSingleBook: builder.query({
@@ -65,6 +65,11 @@ export const bookApi = createApi({
         body: data,
       }),
       invalidatesTags: ['Books'],
+    }),
+    getPublishedYears: builder.query({
+      query: (genre) =>
+        `/api/v1/book/publishedYears${genre && `?genre=${genre}`}`,
+      providesTags: ['Books'],
     }),
     getBookWishlist: builder.query({
       query: () => `/api/v1/wishlist`,
@@ -119,4 +124,5 @@ export const {
   useGetPlanToReadBooksQuery,
   useAddFinishedBookMutation,
   useGetFinishedBooksQuery,
+  useGetPublishedYearsQuery,
 } = bookApi;

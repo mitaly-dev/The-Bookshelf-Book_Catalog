@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 const SignUp = () => {
   const navigate = useNavigate();
   const [createUser, { data, isLoading, isError, isSuccess, error }] =
-    useLoginUserMutation();
+    useCreateUserMutation();
 
   interface MyInputTypes {
     name: string;
@@ -21,10 +21,10 @@ const SignUp = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message);
-      navigate('/login-user');
+      navigate('/user/signin');
     }
     if (isError) {
-      toast.error('Somthing is wrong');
+      toast.error(error?.data?.message);
     }
   }, [isSuccess, isError, data?.message]);
 

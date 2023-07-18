@@ -1,4 +1,7 @@
-import { useGetBookWishlistQuery } from '@/redux/api/bookApi';
+import {
+  useGetBookWishlistQuery,
+  useGetPlanToReadBooksQuery,
+} from '@/redux/api/bookApi';
 import { userInfoFromLocalstorage } from '@/utils/utils';
 import React from 'react';
 import { toast } from 'react-hot-toast';
@@ -6,12 +9,9 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const { data: wishlist, isLoading } = useGetBookWishlistQuery(undefined);
-  const user: string | null = JSON.parse(
-    localStorage.getItem('Bookshelf-Info') || 'null'
-  ) as string | null;
+  const { data: planToReadBooks } = useGetPlanToReadBooksQuery(undefined);
+  const user = userInfoFromLocalstorage;
   const navigate = useNavigate();
-
-  console.log('wishlist', wishlist);
 
   if (isLoading) {
     return <p>loading...</p>;
@@ -42,6 +42,7 @@ const Navbar = () => {
         {/* right side content */}
         <div className="flex gap-8">
           <div className="flex items-center gap-2">
+            <span className="text-sm font-medium"> {user?.email}</span>
             <svg
               width="24"
               height="24"
@@ -108,18 +109,18 @@ const Navbar = () => {
                 </svg>
               </button>
               <span className="absolute -right-4 -top-2 w-5 h-5 text-[10px] rounded-full bg-black text-white flex justify-center items-center">
-                {wishlist.data?.data?.length}
+                {wishlist ? wishlist?.data?.data?.length : 0}
               </span>
             </Link>
 
-            <div className="relative">
+            <Link to="/book/plan-to-read" className="relative">
               <button>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="23"
                   height="23"
                   fill="currentColor"
-                  class="bi bi-book"
+                  className="bi bi-book"
                   viewBox="0 0 16 16"
                   id="IconChangeColor"
                 >
@@ -131,9 +132,9 @@ const Navbar = () => {
                 </svg>
               </button>
               <span className="absolute -right-4 -top-2 w-5 h-5 text-[10px] rounded-full bg-black text-white flex justify-center items-center">
-                2
+                {planToReadBooks ? planToReadBooks?.data?.data?.length : 0}
               </span>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

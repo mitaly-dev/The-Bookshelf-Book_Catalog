@@ -33,6 +33,7 @@ const UpdateBook = () => {
       isLoading: updateIsLoading,
       isError: updateIsError,
       isSuccess: updateIsSuccess,
+      error: updateError,
     },
   ] = useUpdateBookInfoMutation();
 
@@ -53,8 +54,11 @@ const UpdateBook = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (updateIsSuccess) {
-      toast.success('success');
-      navigate(`/book/${id}`);
+      toast.success(updateData?.message);
+      return navigate(`/book/${id}`);
+    }
+    if (updateIsError) {
+      toast.error(updateError?.data?.message);
     }
   }, [updateIsSuccess]);
 
