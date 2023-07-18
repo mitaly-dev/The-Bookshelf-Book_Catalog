@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Banner = () => {
   return (
     <div className="relative h-[85vh] w-full">

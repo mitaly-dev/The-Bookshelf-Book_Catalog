@@ -1,9 +1,7 @@
-import React from 'react';
-
 import { userInfoFromLocalstorage } from '@/utils/utils';
 import { ReactNode } from 'react';
 import { toast } from 'react-hot-toast';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 interface IProps {
   children: ReactNode;

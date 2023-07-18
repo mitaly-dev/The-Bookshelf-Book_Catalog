@@ -7,42 +7,30 @@ import {
   useGetPlanToReadBooksQuery,
 } from '@/redux/api/bookApi';
 import { userInfoFromLocalstorage } from '@/utils/utils';
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const Card = ({ book }: any) => {
   const user = userInfoFromLocalstorage;
-  const [addBookWishlist, { data: wishData, isError, isSuccess }] =
+  const [addBookWishlist, { data: wishData, isSuccess }] =
     useAddBookWishlistMutation();
 
   const [
     addPlanToReadBook,
-    { data: planToReadData, isError: isPlanError, isSuccess: isPlanSuccess },
+    { data: planToReadData, isSuccess: isPlanSuccess },
   ] = useAddPlanToReadBookMutation();
 
   const [
     addFinishedBook,
-    {
-      data: finishedData,
-      isError: isFinishedError,
-      isSuccess: isFinishedSuccess,
-    },
+    { data: finishedData, isSuccess: isFinishedSuccess },
   ] = useAddFinishedBookMutation();
 
   const { data: wishlist } = useGetBookWishlistQuery(undefined);
   const { data: planToReadBooks } = useGetPlanToReadBooksQuery(undefined);
   const { data: finishedBooks } = useGetFinishedBooksQuery(undefined);
 
-  const {
-    title,
-    author,
-    publication,
-    userEmail,
-    imageUrl,
-    genre,
-    _id: id,
-  } = book;
+  const { title, author, publication, imageUrl, genre, _id: id } = book;
 
   // added in wishlist
 

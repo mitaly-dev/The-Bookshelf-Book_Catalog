@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
   useGetSingleBookQuery,
   useUpdateBookInfoMutation,
 } from '@/redux/api/bookApi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateBook } from '@/redux/features/bookSlice';
 import { useAppSelector } from '@/redux/hook';
 
@@ -23,14 +22,12 @@ const UpdateBook = () => {
     genre: book?.genre,
   });
 
-  const { data, isLoading, isError, isSuccess, error } =
-    useGetSingleBookQuery(id);
+  const { data, isError, isSuccess } = useGetSingleBookQuery(id);
 
   const [
     updateBookInfo,
     {
       data: updateData,
-      isLoading: updateIsLoading,
       isError: updateIsError,
       isSuccess: updateIsSuccess,
       error: updateError,
@@ -58,7 +55,7 @@ const UpdateBook = () => {
       return navigate(`/book/${id}`);
     }
     if (updateIsError) {
-      toast.error(updateError?.data?.message);
+      toast.error((updateError as any)?.data?.message);
     }
   }, [updateIsSuccess]);
 

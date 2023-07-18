@@ -3,19 +3,14 @@ import {
   useGetPlanToReadBooksQuery,
 } from '@/redux/api/bookApi';
 import { userInfoFromLocalstorage } from '@/utils/utils';
-import React from 'react';
 import { toast } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const { data: wishlist, isLoading } = useGetBookWishlistQuery(undefined);
+  const { data: wishlist } = useGetBookWishlistQuery(undefined);
   const { data: planToReadBooks } = useGetPlanToReadBooksQuery(undefined);
   const user = userInfoFromLocalstorage;
   const navigate = useNavigate();
-
-  if (isLoading) {
-    return <p>loading...</p>;
-  }
 
   const logoutHandle = () => {
     localStorage.removeItem('Bookshelf-Info');

@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import {
-  useCreateUserMutation,
-  useLoginUserMutation,
-} from '@/redux/api/authApi';
-import toast, { Toaster } from 'react-hot-toast';
+import { useCreateUserMutation } from '@/redux/api/authApi';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [createUser, { data, isLoading, isError, isSuccess, error }] =
+  const [createUser, { data, isError, isSuccess, error }] =
     useCreateUserMutation();
 
   interface MyInputTypes {
@@ -24,14 +21,13 @@ const SignUp = () => {
       navigate('/user/signin');
     }
     if (isError) {
-      toast.error(error?.data?.message);
+      toast.error((error as any)?.data?.message);
     }
   }, [isSuccess, isError, data?.message]);
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
     // eslint-disable-next-line react-hooks/rules-of-hooks
   } = useForm<MyInputTypes>();

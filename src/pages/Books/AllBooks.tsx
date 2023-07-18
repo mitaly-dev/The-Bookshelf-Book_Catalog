@@ -5,7 +5,7 @@ import {
 } from '@/redux/api/bookApi';
 import { setSearchTermValue } from '@/redux/features/searchSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const AllBooks = () => {
@@ -20,7 +20,7 @@ const AllBooks = () => {
 
   const dispatch = useAppDispatch();
 
-  const { data, isLoading, isSuccess, isError } = useGetAllBooksQuery({
+  const { data, isLoading } = useGetAllBooksQuery({
     searchTerm,
     genre,
     publicationYear,

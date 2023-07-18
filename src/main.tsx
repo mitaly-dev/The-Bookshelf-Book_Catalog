@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import routes from './routes/routes.tsx';
 import { Provider } from 'react-redux';
 import store from './redux/store.ts';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

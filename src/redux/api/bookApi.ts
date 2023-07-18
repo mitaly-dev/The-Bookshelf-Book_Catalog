@@ -5,7 +5,7 @@ export const bookApi = createApi({
   reducerPath: 'book',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://the-bookshelf.vercel.app',
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers) => {
       const user: { accessToken: string; email: string } | null =
         userInfoFromLocalstorage ? userInfoFromLocalstorage : null;
 

@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useAddNewBookMutation } from '@/redux/api/bookApi';
 import { userInfoFromLocalstorage } from '@/utils/utils';
 
 const AddBook = () => {
   const navigate = useNavigate();
-  const [addNewBook, { data, isLoading, isError, isSuccess, error }] =
-    useAddNewBookMutation();
+  const [addNewBook, { data, isError, isSuccess }] = useAddNewBookMutation();
 
   const userInfo = userInfoFromLocalstorage;
   interface MyInputTypes {
@@ -34,7 +33,6 @@ const AddBook = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
     // eslint-disable-next-line react-hooks/rules-of-hooks
   } = useForm<MyInputTypes>();

@@ -5,10 +5,10 @@ import {
 } from '@/redux/api/bookApi';
 import { updateBook } from '@/redux/features/bookSlice';
 import { userInfoFromLocalstorage } from '@/utils/utils';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const SingleBook = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const SingleBook = () => {
   const user = userInfoFromLocalstorage;
   const { id } = useParams();
   const { data, isLoading } = useGetSingleBookQuery(id);
-  const [isDelete, setIsDelete] = useState(false);
+
   const [
     deleteBook,
     {
@@ -26,7 +26,7 @@ const SingleBook = () => {
       error: deleteError,
     },
   ] = useDeleteBookMutation();
-  const [addBookReview, { isSuccess }] = useAddBookReviewMutation();
+  const [addBookReview] = useAddBookReviewMutation();
   const [review, setReview] = useState('');
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const SingleBook = () => {
       navigate('/all-books');
     }
     if (deleteIsError) {
-      toast.error(deleteError?.data?.message);
+      toast.error((deleteError as any)?.data?.message);
     }
   }, [deleteSuccess, deleteIsError]);
 
@@ -138,8 +138,8 @@ const SingleBook = () => {
                     onChange={(e) => setReview(e.target.value)}
                     value={review}
                     name="review"
-                    cols="40"
-                    rows="4"
+                    cols={40}
+                    rows={4}
                     className="border rounded-lg px-2 py-2"
                   ></textarea>
                   <button

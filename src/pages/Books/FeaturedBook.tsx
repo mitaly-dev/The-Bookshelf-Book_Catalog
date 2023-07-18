@@ -2,8 +2,7 @@ import Card from '@/components/Card';
 import { useGetFeaturedBookQuery } from '@/redux/api/bookApi';
 
 const FeaturedBook = () => {
-  const { data, isLoading, isSuccess, isError } =
-    useGetFeaturedBookQuery(undefined);
+  const { data, isLoading } = useGetFeaturedBookQuery(undefined);
   console.log('data', data);
 
   if (isLoading) {

@@ -1,5 +1,4 @@
 import Banner from '@/components/Banner';
-import React from 'react';
 import FeaturedBook from './Books/FeaturedBook';
 
 const Home = () => {

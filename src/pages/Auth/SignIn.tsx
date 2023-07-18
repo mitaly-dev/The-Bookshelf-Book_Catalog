@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useLoginUserMutation } from '@/redux/api/authApi';
 import { toast } from 'react-hot-toast';
-import { userInfoFromLocalstorage } from '@/utils/utils';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [loginUser, { data, isLoading, isError, isSuccess, error }] =
+  const [loginUser, { data, isError, isSuccess, error }] =
     useLoginUserMutation();
   interface MyInputTypes {
     email: string;
     password: string;
   }
 
+  console.log('error===========', error);
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message);
@@ -27,14 +27,13 @@ const SignIn = () => {
       window.location.reload();
     }
     if (isError) {
-      toast.error(error?.data?.message);
+      toast.error((error as any)?.data?.message);
     }
   }, [isSuccess, isError]);
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<MyInputTypes>();
 
